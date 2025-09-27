@@ -1,0 +1,22 @@
+{
+  "name": "devtinder-backend",
+  "version": "1.0.0",
+  "description": "Backend for DevTinder Project. Tinder for Devs.",
+  "keywords": [
+    "NodeJS",
+    "Javascript",
+    "Backend",
+    "ExpressJS",
+    "MongoDB",
+    "Mongoose",
+    "APIs"
+  ],
+  "license": "ISC",
+  "author": "Faizaan Lakdawala",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  }
+}
