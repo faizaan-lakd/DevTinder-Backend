@@ -18,4 +18,15 @@ const validateSignUpData = (req) => {
   }
 };
 
-module.exports = { validateSignUpData };
+const validateLoginData = (req, res) => {
+  const { emailId, password } = req.body;
+
+  if (!emailId || !validator.isEmail(emailId)) {
+    throw new Error("Email ID is not valid.");
+  } else if (!password) {
+    // throw new Error("Password cannot be empty.");
+    res.status(400).send("ssdsds");
+  }
+};
+
+module.exports = { validateSignUpData, validateLoginData };

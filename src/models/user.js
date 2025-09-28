@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
     emailId: {
       type: String,
       required: true,
-      unique: true,
+      unique: [true, "User already exists."],
       lowercase: true,
       trim: true,
       validate(value) {
