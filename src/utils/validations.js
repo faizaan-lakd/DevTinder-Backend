@@ -24,8 +24,7 @@ const validateLoginData = (req, res) => {
   if (!emailId || !validator.isEmail(emailId)) {
     throw new Error("Email ID is not valid.");
   } else if (!password) {
-    // throw new Error("Password cannot be empty.");
-    res.status(400).send("ssdsds");
+    throw new Error("Password cannot be empty.");
   }
 };
 

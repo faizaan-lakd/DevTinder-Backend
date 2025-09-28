@@ -1,15 +1,18 @@
 const express = require("express");
 const connectDatabase = require("./config/database");
 const bcrypt = require("bcrypt");
-
+const User = require("./models/user");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 const {
   validateSignUpData,
   validateLoginData,
 } = require("./utils/validations");
-const User = require("./models/user");
+const { userAuth } = require("./middlewares/auth");
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/test", (req, res) => {
   res.send("Hello World!");
@@ -48,15 +51,28 @@ app.post("/login", async (req, res) => {
       throw new Error("Invalid credentials.");
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.validatePassword(password);
 
     if (isPasswordValid) {
+      const token = await user.getJwt();
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+      });
       res.send("Login Successful!");
     } else {
       res.status(400).send("Invalid credentials.");
     }
   } catch (err) {
     res.status(400).send("Invalid credentials.");
+  }
+});
+
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
   }
 });
 
