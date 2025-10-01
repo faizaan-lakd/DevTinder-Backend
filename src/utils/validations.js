@@ -18,7 +18,7 @@ const validateSignUpData = (req) => {
   }
 };
 
-const validateLoginData = (req, res) => {
+const validateLoginData = (req) => {
   const { emailId, password } = req.body;
 
   if (!emailId || !validator.isEmail(emailId)) {
@@ -28,4 +28,58 @@ const validateLoginData = (req, res) => {
   }
 };
 
-module.exports = { validateSignUpData, validateLoginData };
+const validateProfileEditData = (req) => {
+  if (!req.body || typeof req.body !== "object") {
+    return { valid: false, message: "Request body is missing or invalid." };
+  }
+
+  const ALLOWED_EDIT_FIELDS = [
+    "firstName",
+    "lastName",
+    "photoUrl",
+    "about",
+    "skills",
+    "gender",
+    "age",
+  ];
+
+  const bodyKeys = Object.keys(req.body);
+  if (bodyKeys.length === 0) {
+    return { valid: false, message: "No fields provided to update." };
+  }
+
+  const isEditAllowed = bodyKeys.every(
+    (field) =>
+      ALLOWED_EDIT_FIELDS.includes(field) &&
+      req.body[field] !== null &&
+      req.body[field] !== undefined &&
+      req.body[field] !== ""
+  );
+
+  if (isEditAllowed) {
+    return { valid: true };
+  } else {
+    return { valid: false, message: "Invalid edit request." };
+  }
+};
+
+const validateProfileEditPassword = (req) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return { valid: false, message: "Required fields missing." };
+  }
+
+  if (!validator.isStrongPassword(newPassword)) {
+    return { valid: false, message: "New password is not strong enough." };
+  }
+
+  return { valid: true };
+};
+
+module.exports = {
+  validateSignUpData,
+  validateLoginData,
+  validateProfileEditData,
+  validateProfileEditPassword,
+};
